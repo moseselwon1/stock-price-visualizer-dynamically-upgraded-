@@ -1,0 +1,56 @@
+✅ Step 1: Open Your Project Folder
+
+How to Create a Python File in File Explorer (Windows)
+Right-click anywhere in the folder (stock-price-visualizer-pro)
+
+Hover over "New"
+
+Select "Text Document"
+
+Rename it exactly to:
+
+main.py Once that’s done, open main.py in: VS Code,
+In VS Code, go to the top menu: File → Open Folder
+
+Select your folder:
+Documents → stock-price-visualizer-pro
+
+Click "Select Folder"
+
+✅ Step 2: Create main.py
+
+On the left sidebar, click the New File icon (📄 with a +)
+
+Name the file: main.py
+
+Press Enter
+(You now have a Python file ready for code)
+
+✅ Step 3: Paste the Starter Code
+
+
+Python/Streamlit code for dynamic stock MA charting (with 20, 50, 100-day options, ticker selector, theme, auto-refresh, and interactive visuals).Next Step: Run the Streamlit app
+In VS Code:
+
+Open the terminal:
+
+Press Ctrl + ~ (tilde), or
+
+Click on “Terminal” > “New Terminal” at the top
+
+In the terminal, type:
+
+streamlit run main.py
+Your default browser will automatically open showing this:
+
+A sidebar to select:
+
+Ticker (e.g. PHTL, AAPL, UPST)
+
+Date range
+
+Moving averages (10/20/50/100/200)
+
+A dynamic chart with MA overlays
+
+The latest price data table etc

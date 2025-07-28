@@ -1,0 +1,118 @@
+Import Statements
+
+import streamlit as st 
+import yfinance as yf
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+
+streamlit as st: Streamlit is used to build the interactive web app.
+
+yfinance as yf: Lets you download real-time stock data from Yahoo Finance.
+
+pandas as pd: Used for handling and analyzing the tabular stock data.
+
+matplotlib.pyplot as plt: Used to plot the charts (price + moving averages).
+
+datetime, timedelta: Allows working with date inputs (e.g., last 180 days).
+
+Set Up the Page
+
+st.set_page_config(page_title="Stock Price Visualizer Pro", layout="wide")
+Sets the web app's title and makes the layout wide to give more room for charts.
+
+Sidebar Inputs
+
+st.sidebar.title("📊 Stock Price Visualizer Pro")
+Adds a sidebar with a title.
+
+ticker = st.sidebar.text_input("Enter Ticker Symbol (e.g. AAPL, TSLA)", value="AAPL")
+Lets the user type in a stock symbol (default is “AAPL”).
+
+start_date = st.sidebar.date_input("Start Date", value=datetime.now() - timedelta(days=180))
+end_date = st.sidebar.date_input("End Date", value=datetime.now())
+User chooses start and end dates for the chart (default: past 180 days).
+
+moving_averages = st.sidebar.multiselect(
+    "Select Moving Averages (Days)",
+    options=[10, 20, 50, 100, 200],
+    default=[20, 50, 100]
+)
+User picks which moving averages to display. Default: MA20, MA50, MA100.
+
+
+
+📥 Download the Data
+
+@st.cache_data
+def load_data(ticker, start, end):
+    df = yf.download(ticker, start=start, end=end)
+    return df
+This function gets stock price data using yfinance.
+@st.cache_data saves the result so Streamlit doesn’t reload it every time unless inputs change.
+
+df = load_data(ticker, start_date, end_date)
+Calls the function to get the stock data (as a DataFrame).
+
+⚠️ Handle Empty Data
+
+if df.empty:
+    st.warning("⚠️ No data found. Check the ticker symbol or date range.")
+    st.stop()
+If the ticker doesn’t return data (invalid ticker/date), it shows a warning and stops the app.
+
+📐 Calculate Moving Averages
+
+for ma in moving_averages:
+    df[f"MA{ma}"] = df["Close"].rolling(window=ma).mean()
+For each selected MA (like 20/50/100), calculate the rolling average of the closing price.
+
+Adds new columns: MA20, MA50, etc.
+
+📈 Plot Stock Price Chart
+
+st.title(f"📈 {ticker.upper()} Stock Price Chart")
+st.caption(f"Data from {start_date} to {end_date}")
+Adds the main title and sub-caption with date range.
+
+fig, ax = plt.subplots(figsize=(12, 6))
+ax.plot(df["Close"], label="Close Price", color="black", linewidth=2)
+Creates the base chart and plots the closing price in black.
+
+for ma in moving_averages:
+    ax.plot(df[f"MA{ma}"], label=f"MA {ma}", linewidth=1.5)
+Adds each moving average line on the chart.
+
+ax.set_xlabel("Date")
+ax.set_ylabel("Price ($)")
+ax.grid(True)
+ax.legend()
+Adds axis labels, a grid, and a legend for clarity.
+
+st.pyplot(fig)
+Displays the chart in the app.
+
+📋 Show Recent Price Table
+
+st.subheader("📋 Recent Price + MA Data")
+st.dataframe(df.tail(20), use_container_width=True)
+Shows the last 20 rows of data, including Close + MA columns.
+use_container_width=True makes it stretch across the page.
+
+
+
+
+Summary of What This Code Does:
+Takes a stock ticker, date range, and MA inputs from the user.
+
+Pulls real-time data using yfinance.
+
+Calculates the selected moving averages (20/50/100).
+
+Plots an interactive price + MA chart.
+
+Displays the latest 20 rows of stock + MA data in a table.
+
+
+
+
